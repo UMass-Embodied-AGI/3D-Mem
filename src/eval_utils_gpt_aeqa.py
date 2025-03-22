@@ -25,7 +25,7 @@ def format_content(contents):
                 {
                     "type": "image_url",
                     "image_url": {
-                        "url": f"data:image/jpeg;base64,{c[1]}",
+                        "url": f"data:image/png;base64,{c[1]}",
                         "detail": "high",
                     },
                 }
