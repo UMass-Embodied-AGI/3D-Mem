@@ -25,7 +25,7 @@ def format_content(contents):
                 {
                     "type": "image_url",
                     "image_url": {
-                        "url": f"data:image/jpeg;base64,{c[1]}",
+                        "url": f"data:image/png;base64,{c[1]}",
                         "detail": "high",
                     },
                 }
@@ -45,7 +45,7 @@ def call_openai_api(sys_prompt, contents) -> Optional[str]:
     while retry_count < max_tries:
         try:
             completion = client.chat.completions.create(
-                model="gpt-4o",  # model = "deployment_name"
+                model="doubao-1-5-vision-pro-32k-250115",  # model = "deployment_name"
                 messages=message_text,
                 temperature=0.7,
                 max_tokens=4096,
