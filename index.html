@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D-Mem: 3D Scene Memory for Embodied Exploration and Reasoning</title>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-06E12DG85Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-06E12DG85Q');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/icon.ico"  type="image/x-icon">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <style>
+    /* Optionally, ensure there is no clipping in publication-video containers */
+    .publication-video {
+      overflow: visible; /* or overflow: auto */
+    }
+    
+    /* Enforce video scaling rules */
+    .publication-video video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <!-- <h1 class="title is-1 publication-title">SnapMem: Snapshot-based 3D Scene Memory for Embodied Exploration and Reasoning</h1> -->
+          <h1 class="title is-1 publication-title">
+            <a style="color:#6e44ff;">3</a><a style="color:#b892ff;">D</a>-<a style="color:#ffc2e2;">M</a><a style="color:#ff90b3;">e</a><a style="color:#ef7a85;">m</a>            
+          </h1>
+          <h2 class="subtitle is-3 publication-subtitle">
+            3D Scene Memory for Embodied Exploration and Reasoning      
+          </h2>
+          <h2 class="subtitle publication-subtitle" style="font-size: 1.7rem;color:#000000; margin-top: -7px;">
+            CVPR 2025      
+          </h2>
+          <div class="is-size-5 publication-authors" style="margin-top: -7px;">
+            <span class="author-block">
+              <a href="https://yyuncong.github.io/">Yuncong Yang</a>*<sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://hanyangclarence.github.io/">Han Yang</a>*<sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/jiachen-zhou5/">Jiachen Zhou</a><sup>3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://peihaochen.github.io/">Peihao Chen</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://icefoxzhx.github.io/">Hongxin Zhang</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://yilundu.github.io/">Yilun Du</a><sup>4</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://people.csail.mit.edu/ganchuang/">Chuang Gan</a><sup>1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>UMass Amherst,</span>
+            <span class="author-block"><sup>2</sup>CUHK,</span>
+            <span class="author-block"><sup>3</sup>Columbia University,</span>
+            <span class="author-block"><sup>4</sup>MIT</span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">(* indicates equal contribution)</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!-- <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span> -->
+              <span class="link-block">
+                <a href="https://www.arxiv.org/abs/2411.17735"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=PbnWizEJL8w"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/UMass-Foundation-Model/3D-Mem"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://x.com/YuncongYY/status/1896658892266074172"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-twitter"></i>
+                  </span>
+                  <span>Twitter</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/teaser.mp4"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">Nerfies</span> turns selfie videos from your phone into
+        free-viewpoint
+        portraits.
+      </h2>
+    </div>
+  </div>
+</section> -->
+
+
+<!-- <section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/steve.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/chair-tp.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/shiba.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-fullbody">
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/fullbody.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-blueshirt">
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/blueshirt.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-mask">
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/mask.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-coffee">
+          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/coffee.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-toby">
+          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/toby2.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+
+<section class="section">
+  <div class="container is-four-fifths">
+
+    <!-- Paper video. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <!-- <h2 class="title is-3">Video</h2> -->
+        <div class="publication-video">
+          <video src="static/videos/video_intro.mp4" controls autoplay muted
+                style="width: 100%; height: auto;">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+    <!--/ Paper video. -->
+
+    <!-- Abstract. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column" style="max-width: 60%; margin: 0 auto;">
+        <h2 class="title is-3" style="padding-top: 80px;">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Constructing compact and informative 3D scene representations is essential for effective embodied exploration and reasoning, especially in complex environments over long periods. Existing scene representations, such as object-centric 3D scene graphs, have significant limitations. They oversimplify spatial relationships by modeling scenes as individual objects, with inter-object relationships described by restrictive texts, making it difficult to answer queries that require nuanced spatial understanding. Furthermore, these representations lack natural mechanisms for active exploration and memory management, which hampers their application to lifelong autonomy. In this work, we propose SnapMem, a novel snapshot-based scene representation serving as 3D scene memory for embodied agents. SnapMem employs informative images, termed Memory Snapshots, to capture rich visual information of explored regions. It also integrates frontier-based exploration by introducing Frontier Snapshots—glimpses of unexplored areas—that enable agents to make informed exploration decisions by considering both known and potential new information. Meanwhile, to support lifelong memory in active exploration settings, we further present an incremental construction pipeline for SnapMem, as well as an effective memory retrieval technique for memory management. Experimental results on three benchmarks demonstrate that SnapMem significantly enhances agents' exploration and reasoning capabilities in 3D environments over extended periods, highlighting its potential for advancing applications in embodied AI.           
+          </p>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Abstract. -->
+
+    
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Constructing compact and informative 3D scene representations is essential for effective embodied exploration and reasoning, especially in complex environments over extended periods. Existing representations, such as object-centric 3D scene graphs, oversimplify spatial relationships by modeling scenes as isolated objects with restrictive textual relationships, making it difficult to address queries requiring nuanced spatial understanding. Moreover, these representations lack natural mechanisms for active exploration and memory management, hindering their application to lifelong autonomy. In this work, we propose 3D-Mem, a novel 3D scene memory framework for embodied agents. 3D-Mem employs informative multi-view images, termed Memory Snapshots, to represent the scene and capture rich visual information of explored regions. It further integrates frontier-based exploration by introducing Frontier Snapshots—glimpses of unexplored areas—enabling agents to make informed decisions by considering both known and potential new information. To support lifelong memory in active exploration settings, we present an incremental construction pipeline for 3D-Mem, as well as a memory retrieval technique for memory management. Experimental results on three benchmarks demonstrate that 3D-Mem significantly enhances agents' exploration and reasoning capabilities in 3D environments, highlighting its potential for advancing applications in embodied AI.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Methodology. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <!-- <h3 class="title is-4">How to empower VLM agents with lifelong exploration and reasoning abilities?</h3> -->
+        <h3 class="title is-4" style="font-size: 1.46rem;">How to unleash the power of VLM agents in lifelong exploration and reasoning?</h3>
+        <h4 class="title is-5" style="padding-top: 20px; font-size: 1.2rem;">1. Incremental Construction of 3D Scene Memory</h4>
+
+        <video style="transform: scale(1.2); width: 80%; padding-top: 30px; padding-bottom: 40px;" autoplay muted loop playsinline preload="auto">
+          <source src="static/videos/demo_gif_1.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+
+        <div class="content has-text-justified">
+          <!-- <p>
+            At each timestep, given a stream of egocentric views, <strong>SnapMem</strong> performs the following steps:
+          </p> -->
+          <ol style="text-align: left;">
+            <li>Detect object instances and construct object nodes.</li>
+            <li>Adds newly detected objects.</li>
+            <li>Updates 3D scene memory using the Co-Visibility Clustering algorithm.</li>
+          </ol>
+        </div>
+        <h4 class="title is-5" style="padding-top: 30px; font-size: 1.2rem;">2. Retrieval and Reasoning of 3D Scene Memory</h4>
+
+        <video style="width: 80%; padding-top: 0px; padding-bottom: 10px;" autoplay muted loop playsinline preload="auto">
+          <source src="static/videos/demo_gif_2.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+
+        <div class="content has-text-justified">
+          <p>
+            The 3D scene memory is efficiently filtered using <strong>Prefiltering</strong>. The VLM agent then leverages:
+          </p>
+          <ul style="text-align: left;">
+            <li><em>Memory Snapshots</em>—filtered scene memory for explored regions.</li>
+            <li><em>Frontier Snapshots</em>—glimpses of unexplored regions.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!--/ Methodology. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Demo -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Demos</h2>
+
+        <div class="content has-text-justified">
+          <p> 
+            Each demo represents an Embodied Q&A episode in a Habitat-sim scene, where the agent is required to answer 6-8 questions in sequence. 
+            <!-- In each frame, the current question is displayed at the top, followed by four columns of illustrations:  -->
+          </p>
+          <p>
+            <strong>Top-down map.</strong> The notations are explained in the following:
+              <div class="legend">
+                <img src="static/images/legend.png" alt="Legend for Top-down Map" />
+              </div>
+          </p>
+        </div>
+
+        <div class="columns is-centered has-text-centered" style="margin-bottom: -15mm; margin-top: 30mm; ">
+          <div class="column">
+            <div class="publication-video">
+              <video src="static/videos/qualitative_1.mp4" controls autoplay muted
+                    style="width: 100%; height: auto;">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns is-centered has-text-centered" style="margin-bottom: -15mm;">
+          <div class="column">
+            <div class="publication-video">
+              <video src="static/videos/qualitative_2.mp4" controls autoplay muted
+                    style="width: 100%; height: auto;">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns is-centered has-text-centered" style="margin-bottom: -15mm;">
+          <div class="column">
+            <div class="publication-video">
+              <video src="static/videos/qualitative_3.mp4" controls autoplay muted
+                    style="width: 100%; height: auto;">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns is-centered has-text-centered" style="margin-bottom: -15mm;">
+          <div class="column">
+            <div class="publication-video">
+              <video src="static/videos/qualitative_4.mp4" controls autoplay muted
+                    style="width: 100%; height: auto;">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Demo -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Real-World Demo</h2>
+
+        <!-- Interpolating. -->
+        <!-- <h3 class="title is-4">Interpolating states</h3> -->
+        <div class="content has-text-justified">
+          <!-- <p> 
+            We present demos of <strong>Embodied Q&A</strong> in <strong>lifelong</strong> exploration scenarios. 
+            The agent is initialized at a specific location in an unknown environment and tasked with <strong>answering a series of questions</strong>. 
+            The agent either selects a frontier to explore or uses the scene memory to reason about the questions. 
+          </p>  -->
+          <p> 
+            Thanks to its training-free design, 3D-Mem seamlessly adapts to real robots—like low-height quadrupeds—enabling practical deployment in the real world. 
+            <!-- In each frame, the current question is displayed at the top, followed by four columns of illustrations:  -->
+          </p>
+        </div>
+
+        <div class="columns is-centered has-text-centered">
+          <div class="column">
+            <div class="publication-video">
+              <video src="static/videos/real-world.mp4" controls autoplay muted
+                    style="width: 100%; height: auto;">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/ Animation. -->
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Demo -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Memory Aggregation Demos</h2>
+
+        <!-- Interpolating. -->
+        <!-- <h3 class="title is-4">Interpolating states</h3> -->
+        <div class="content has-text-justified">
+          <p>
+            We further illustrate how 3D-Mem is aggregated during exploration with the following video. Each video illustrates a task-agnostic exploration episode.
+          </p>
+        </div>
+    
+        <!-- Single row of columns for all three videos -->
+    <div class="columns is-centered has-text-centered">
+
+      <!-- Column #1 -->
+      <div class="column">
+        <div class="publication-video">
+          <video controls autoplay muted
+                 style="display: block; width: 100%; height: auto;">
+            <source src="static/videos/topdown1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <!-- Column #2 -->
+      <div class="column">
+        <div class="publication-video">
+          <video controls autoplay muted
+                 style="display: block; width: 100%; height: auto;">
+            <source src="static/videos/topdown2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <!-- Column #3 -->
+      <div class="column">
+        <div class="publication-video">
+          <video controls autoplay muted
+                 style="display: block; width: 100%; height: auto;">
+            <source src="static/videos/topdown3.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+        
+  </div>
+</section>
+
+<section class="section" id="BibTeX" style="margin-top: 30mm;">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@misc{yang20243dmem3dscenememory,
+      title={3D-Mem: 3D Scene Memory for Embodied Exploration and Reasoning}, 
+      author={Yuncong Yang and Han Yang and Jiachen Zhou and Peihao Chen and Hongxin Zhang and Yilun Du and Chuang Gan},
+      year={2024},
+      eprint={2411.17735},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2411.17735}, 
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <!-- <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div> -->
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
